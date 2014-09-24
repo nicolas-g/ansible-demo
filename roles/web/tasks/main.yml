@@ -1,16 +1,26 @@
 ---
 
 # httpd is handled by the base-apache role upstream
-- name: Install php and git 
+- name: Install httpd,php and git 
   yum: name={{ item }} state=present
   with_items:
    - php
    - php-mysql
    - git
+   - httpd
 
-- name: Configure SELinux to allow httpd to connect to remote database
-  seboolean: name=httpd_can_network_connect_db state=true persistent=yes
-  when: sestatus.rc != 0
+- name: checkout the code from git repository
+  git: repo={{ repository }} dest=/var/www/html/
+  tags:
+    - release
 
-- name: Copy the code from repository
-  git: repo={{ repository }} version={{ webapp_version }} dest=/var/www/html/
+- name: deploy Apache httpd.conf
+  template: src=httpd.conf.j2 dest=/etc/httpd/conf/httpd.conf owner=root group=root mode=0644
+  notify:
+    - restart httpd
+
+- name: deploy image file
+  copy: src=fat-slide.gif dest=/var/www/html/
+
+- name: http service state
+  service: name=httpd state=started enabled=yes

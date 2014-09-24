@@ -29,6 +29,11 @@ defaults
     timeout check           10s
     maxconn                 3000
 
+listen stats-1 :8005
+    mode http
+    stats enable
+    stats uri /
+
 backend app
     {% for host in groups['lbservers'] %}
     	listen {{ daemonname }} {{ hostvars[host]['ansible_' + iface].ipv4.address }}:{{ listenport }}

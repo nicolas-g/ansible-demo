@@ -1,22 +1,20 @@
 ---
 # This role contains common plays that will run on all nodes.
 
-- name: Install python bindings for SE Linux
-  yum: name={{ item }} state=present
-  with_items:
-   - libselinux-python
-   - libsemanage-python
-
 - name: Create the repository for EPEL
   copy: src=epel.repo dest=/etc/yum.repos.d/epel.repo
 
 - name: Create the GPG key for EPEL
   copy: src=RPM-GPG-KEY-EPEL-6 dest=/etc/pki/rpm-gpg
 
-- name: test to see if selinux is running
-  command: getenforce
-  register: sestatus
-  changed_when: false
+- name: Install python bindings for SE Linux
+  yum: name={{ item }} state=present
+  with_items:
+   - libselinux-python
+   - libsemanage-python
 
 - name: disable SELinux
   selinux: policy=targeted state=permissive
+
+- name: disable iptables since we are using Amazon EC2 security groups
+  service: name=iptables enabled=no state=stopped
