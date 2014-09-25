@@ -1,5 +1,11 @@
-Ansible use of EC2 module to launch and configure a simple LAMP Stack + HAProxy.
+ LAMP Stack + HAProxy.
 --------------------------------------------------------------------------------
+
+`ec2quick_launch.yml` to launch all resourses you need in AWS (ec2 instances/Security Groups, Route 53)
+`site.yml` to configure and deploy the LAMP stack.
+`rolling_update.yml` for rolling upgrades on the Web Tier
+
+Ansible use of EC2 module to launch and configure a simple
 
 Tested with
 -  Ansible 1.7.1
