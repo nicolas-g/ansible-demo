@@ -1,0 +1,78 @@
+---
+###########################
+# Visitor-Profile Cluster #
+###########################
+- hosts: localhost
+  connection: local
+  #user: root
+  gather_facts: false 
+
+  vars:
+      keypair: rs-dev 
+      instance_type: m1.large
+      security_group: E2E #"[E2E, TrustedIPs]"
+      instance_tags : '{"Environment":"Demo"}'
+      image: "ami-cfecdaa6"
+      count: 4
+      region: us-east-1
+      #ec2_access_key: "--REMOVED--"
+      #ec2_secret_key: "--REMOVED--"
+
+  tasks:
+
+    - name: Launch Servers
+      local_action: ec2 keypair={{ keypair }} group={{ security_group }}  instance_tags='{{ instance_tags }}' instance_type={{ instance_type }} image={{ image }} count={{ count }} region={{ region }} wait=true # aws_access_key={{ ec2_access_key }} aws_secret_key={{ ec2_secret_key }}
+      register: ec2
+
+      #local_action: add_host hostname=${item.public_ip} groupname=demogroup
+    - name: Itemised host group addition
+      add_host: hostname={{ item.public_ip }} groupname=ec2hosts
+      with_items: ec2.instances
+
+    - name: Tag Web1
+      local_action: ec2_tag resource={{ item.id }} region={{ region }} state=present
+      with_items: ec2.instances
+      when: item['ami_launch_index'] == '0'
+      args:
+        tags:
+          Name: web1demo.stg.cogmatch.net
+    - name: update Route53 DNS record for web1demo.stg.cogmatch.net
+      local_action: route53 command=create overwrite=true zone=stg.cogmatch.net. record=web1demo.stg.cogmatch.net type=A ttl=60 value={{ item.public_ip }}
+      with_items: ec2.instances
+      when: item['ami_launch_index'] == '0'
+
+    - name: Tag Web2
+      local_action: ec2_tag resource={{ item.id }} region={{ region }} state=present
+      with_items: ec2.instances
+      when: item['ami_launch_index'] == '1'
+      args:
+        tags:
+          Name: web2demo.stg.cogmatch.net
+    - name: update Route53 DNS record for web2demo.stg.cogmatch.net
+      local_action: route53 command=create overwrite=true zone=stg.cogmatch.net. record=web2demo.stg.cogmatch.net type=A ttl=60 value={{ item.public_ip }}
+      with_items: ec2.instances
+      when: item['ami_launch_index'] == '1'
+
+    - name: Tag DB1
+      local_action: ec2_tag resource={{ item.id }} region={{ region }} state=present
+      with_items: ec2.instances
+      when: item['ami_launch_index'] == '2'
+      args:
+        tags:
+          Name: db1demo.stg.cogmatch.net
+    - name: update Route53 DNS record for db1demo.stg.cogmatch.net
+      local_action: route53 command=create overwrite=true zone=stg.cogmatch.net. record=db1demo.stg.cogmatch.net type=A ttl=60 value={{ item.public_ip }}
+      with_items: ec2.instances
+      when: item['ami_launch_index'] == '2'
+
+    - name: Tag LB1
+      local_action: ec2_tag resource={{ item.id }} region={{ region }} state=present
+      with_items: ec2.instances
+      when: item['ami_launch_index'] == '3'
+      args:
+        tags:
+          Name: lb1demo.stg.cogmatch.net
+    - name: update Route53 DNS record for lb1demo.stg.cogmatch.net
+      local_action: route53 command=create overwrite=true zone=stg.cogmatch.net. record=lb1demo.stg.cogmatch.net type=A ttl=60 value={{ item.public_ip }}
+      with_items: ec2.instances
+      when: item['ami_launch_index'] == '3'
