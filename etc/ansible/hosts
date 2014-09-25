@@ -1,0 +1,17 @@
+[local]
+localhost
+
+[e2e-qa]
+localhost
+
+[e2e-dev]
+localhost
+
+[mmdb-local]
+localhost
+
+[assetstoredb-local]
+localhost
+
+[webservers]
+localhost
