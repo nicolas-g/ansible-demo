@@ -1,6 +1,6 @@
 [webservers]
 web1.demo.cogmatch.net
-#web2.demo.cogmatch.net
+web2.demo.cogmatch.net
 
 [dbservers]
 db1.demo.cogmatch.net
