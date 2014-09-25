@@ -1,9 +1,9 @@
 [webservers]
-web1demo.stg.cogmatch.net
-web2demo.stg.cogmatch.net
+web1.demo.cogmatch.net
+#web2.demo.cogmatch.net
 
 [dbservers]
-db1demo.stg.cogmatch.net
+db1.demo.cogmatch.net
 
 [lbservers]
-lb1demo.stg.cogmatch.net
+lb1.demo.cogmatch.net
