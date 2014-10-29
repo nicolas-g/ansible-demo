@@ -5,27 +5,34 @@
 `site.yml` to configure and deploy the LAMP stack.
 `rolling_update.yml` for rolling upgrades on the Web Tier
 
-Ansible use of EC2 module to launch and configure a simple
-
 Tested with
 -  Ansible 1.7.1
 -  CentOS release 6.5
 
-Run first `ansible-playbook ec2quick_launch.yml` first in order to provision all the required AWS resources that you will use to deploy your application in the next step. The `ec2quick_launch.yml` playbook will configure Route53 records, Security Groups and the bellow 4 EC2 instances :
+
+
+#### Initial Launch: run `ansible-playbook ec2quick_launch.yml` 
+* this will provision all the required AWS resources that you will use to deploy your application in the next step. The `ec2quick_launch.yml` playbook will configure Route53 records, Security Groups and the bellow 4 EC2 instances :
 
 * lb1.demo.cogmatch.net
 * db1.demo.cogmatch.net
 * web1.demo.cogmatch.net
 * web2.demo.cogmatch.net
 
-# when you have configured the servers open in your browser the address http://lb1.demo.cogmatch.net:8888/ to see the page checkout from git 
-# run site.yml using the `release` tag
-# commit a change in demo-app.git repository and run again `site.yml` using the `release` tag
-# visit http://lb1.demo.cogmatch.net:8005/ for HA_Proxy statistics
-# remove 1 web node from the `hosts` file
-# run again the site.yml
-# open http://lb1.demo.cogmatch.net:8005/ and confirm the web node was removed 
 
+We will configure the entire stack by listing our hosts in the 'hosts' inventory file, grouped by their purpose:
+
+		[webservers]
+		web1.demo.cogmatch.net
+		web2.demo.cogmatch.net
+		
+		[dbservers]
+		db1.demo.cogmatch.net
+		
+		[lbservers]
+		lb1.demo.cogmatch.net
+
+#### Configure the servers : run `ansible-playbook -i hosts site.yml --private-key=~/.ssh/rs-dev -u root`
 
 This example is an extension of the simple LAMP deployment. Here we'll install
 and configure a web server with an HAProxy load balancer in front, and deploy
@@ -34,31 +41,13 @@ capability to dynamically add and remove web server nodes from the deployment.
 It also includes examples to do a rolling update of a stack without affecting
 the service.
 
-
-### Initial Site Setup
-
-First we configure the entire stack by listing our hosts in the 'hosts'
-inventory file, grouped by their purpose:
-
-		[webservers]
-		webserver1
-		webserver2
-		
-		[dbservers]
-		dbserver
-		
-		[lbservers]
-		lbserver
-		
-
-After which we execute the following command to deploy the site:
-
-		ansible-playbook -i hosts site.yml
-
-The deployment can be verified by accessing the IP address of your load
-balancer host in a web browser: http://<ip-of-lb>:8888. Reloading the page
-should have you hit different webservers.
-
+* when you have configured the servers open on your browser the address http://lb1.demo.cogmatch.net:8888/ to see the page checkout from git 
+* run site.yml using the `release` tag
+* commit a change in demo-app.git repository and run again `site.yml` using the `release` tag
+* visit http://lb1.demo.cogmatch.net:8005/ for HA_Proxy statistics
+* remove 1 web node from the `hosts` file
+* run again the site.yml
+* open http://lb1.demo.cogmatch.net:8005/ and confirm the web node was removed 
 
 ### Removing and Adding a Node
 
