@@ -12,15 +12,7 @@ Tested with
 
 
 #### Initial Launch: run `ansible-playbook ec2quick_launch.yml` 
-* this will provision all the required AWS resources that you will use to deploy your application in the next step. The `ec2quick_launch.yml` playbook will configure Route53 records, Security Groups and the bellow 4 EC2 instances :
-
-* lb1.demo.cogmatch.net
-* db1.demo.cogmatch.net
-* web1.demo.cogmatch.net
-* web2.demo.cogmatch.net
-
-
-We will configure the entire stack by listing our hosts in the 'hosts' inventory file, grouped by their purpose:
+* this will provision all the required AWS resources that you will use to deploy your application in the next step. The `ec2quick_launch.yml` playbook will configure Route53 records, Security Groups and the bellow 4 ec2 instances defined in the `hosts` inventory file grouped by their purpose:
 
 		[webservers]
 		web1.demo.cogmatch.net
