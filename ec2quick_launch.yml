@@ -2,7 +2,6 @@
 
 - hosts: localhost
   connection: local
-  #user: root
   gather_facts: false 
 
   vars:
@@ -36,7 +35,6 @@
       local_action: ec2 keypair={{ keypair }} group={{ security_group }}  instance_tags='{{ instance_tags }}' instance_type={{ instance_type }} image={{ image }} count={{ count }} region={{ region }} wait=true # aws_access_key={{ ec2_access_key }} aws_secret_key={{ ec2_secret_key }}
       register: ec2
 
-      #local_action: add_host hostname=${item.public_ip} groupname=demogroup
     - name: Itemised host group addition
       add_host: hostname={{ item.public_ip }} groupname=ec2hosts
       with_items: ec2.instances
