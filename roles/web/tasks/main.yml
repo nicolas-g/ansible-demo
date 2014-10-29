@@ -9,6 +9,28 @@
    - git
    - httpd
 
+  # The bellow task is to avoid SSH prompt user to authorize the first contact with github.com host
+  # equivilant by running the command -> ssh-keyscan github.com >> ~/.ssh/known_hosts
+- name: add github.com publick key into ~/.ssh/known_hosts
+  shell: ssh-keyscan github.com
+  register: github_public_key
+  tags:
+    - git
+
+- name: create ~/.ssh/known_hosts if not present
+  file: dest=~/.ssh/known_hosts state=touch mode=0644
+  tags:
+    - git
+
+- name: add the hostname to the hosts file
+  lineinfile: dest=~/.ssh/known_hosts
+              regexp="^github.com ssh-rsa"
+              line="{{ github_public_key.stdout }}"
+              state=present
+              create=yes
+  tags:
+    - git
+
 - name: checkout the code from git repository
   git: repo={{ repository }} dest=/var/www/html/
   tags:

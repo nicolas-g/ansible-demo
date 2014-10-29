@@ -11,4 +11,5 @@
 iface: '{{ ansible_default_ipv4.interface }}'
 
 # this is the repository that holds our sample webapp
-repository: https://github.com/nicolas-g/demo.git
+#repository: "git@github.com:nicolas-g/demo-app.git"
+repository: https://github.com/nicolas-g/demo-app.git

@@ -11,6 +11,13 @@ Tested with
 -  Ansible 1.7.1
 -  CentOS release 6.5
 
+Run first `ansible-playbook ec2quick_launch.yml` first in order to provision all the required AWS resources that you will use to deploy your application in the next step. The `ec2quick_launch.yml` playbook will configure Route53 records, Security Groups and the bellow 4 EC2 instances :
+
+* lb1.demo.cogmatch.net
+* db1.demo.cogmatch.net
+* web1.demo.cogmatch.net
+* web2.demo.cogmatch.net
+
 This example is an extension of the simple LAMP deployment. Here we'll install
 and configure a web server with an HAProxy load balancer in front, and deploy
 an application to the web servers. This set of playbooks also have the
