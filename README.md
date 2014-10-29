@@ -18,6 +18,15 @@ Run first `ansible-playbook ec2quick_launch.yml` first in order to provision all
 * web1.demo.cogmatch.net
 * web2.demo.cogmatch.net
 
+# when you have configured the servers open in your browser the address http://lb1.demo.cogmatch.net:8888/ to see the page checkout from git 
+# run site.yml using the `release` tag
+# commit a change in demo-app.git repository and run again `site.yml` using the `release` tag
+# visit http://lb1.demo.cogmatch.net:8005/ for HA_Proxy statistics
+# remove 1 web node from the `hosts` file
+# run again the site.yml
+# open http://lb1.demo.cogmatch.net:8005/ and confirm the web node was removed 
+
+
 This example is an extension of the simple LAMP deployment. Here we'll install
 and configure a web server with an HAProxy load balancer in front, and deploy
 an application to the web servers. This set of playbooks also have the
